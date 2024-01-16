@@ -1,0 +1,3 @@
+@Builder function Foo() {
+  Row() {}
+}

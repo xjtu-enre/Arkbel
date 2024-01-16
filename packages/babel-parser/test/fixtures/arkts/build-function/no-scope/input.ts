@@ -1,0 +1,8 @@
+@Component
+struct Foo {
+  build() {
+    {
+
+    }
+  }
+}
