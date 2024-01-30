@@ -114,8 +114,21 @@ function getParserClass(pluginsFromOptions: PluginList): {
   if (!cls) {
     cls = Parser;
     for (const plugin of pluginList) {
-      // @ts-expect-error todo(flow->ts)
-      cls = mixinPlugins[plugin](cls);
+      /**
+       * ArkTS parser is a subclass of TypeScript parser, given TypeScript parser is created by mixin,
+       * ArkTS parser follows the same way by first create a TypeScript parser, then mixin ArkTS parser.
+       */
+      if (plugin === 'arkts'
+        // TODO: Online visualization only, should be removed for final release
+        || plugin === 'typescript') {
+        // @ts-ignore
+        const tsCls = mixinPlugins["typescript"](cls);
+        // @ts-ignore
+        cls = mixinPlugins['arkts'](tsCls);
+      } else {
+        // @ts-expect-error todo(flow->ts)
+        cls = mixinPlugins[plugin](cls);
+      }
     }
     parserClassCache[key] = cls;
   }

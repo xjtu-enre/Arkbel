@@ -276,6 +276,9 @@ export const tt = {
   _for: createKeyword("for", { isLoop }),
   _while: createKeyword("while", { isLoop }),
   // end: isLoop
+  // start: arkts
+  _struct: createKeyword("struct", { startsExpr }),
+  // end: arkts
   // end: isKeyword
 
   // Primary literals

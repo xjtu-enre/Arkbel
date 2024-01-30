@@ -78,7 +78,8 @@ export type Declaration =
   | TsInterfaceDeclaration
   | TsTypeAliasDeclaration
   | TsEnumDeclaration
-  | TsModuleDeclaration;
+  | TsModuleDeclaration
+  | ArkTSStructDeclaration;
 // | Placeholder<"Declaration">;
 
 export interface DeclarationBase extends NodeBase {
@@ -578,7 +579,8 @@ export interface SpreadElement extends NodeBase {
 
 export interface MemberExpression extends NodeBase {
   type: "MemberExpression";
-  object: Expression | Super;
+  // (Optional) ArkTS only
+  object?: Expression | Super;
   property: Expression;
   computed: boolean;
 }
@@ -1695,4 +1697,59 @@ export interface ParseSubscriptState {
 export interface ParseClassMemberState {
   hadConstructor: boolean;
   hadSuperClass: boolean;
+}
+
+// ================
+// ArkTS
+// ================
+
+export type ArkTSDecoratable =
+  | Class
+  | FunctionDeclaration
+  | ArkTSStructDeclaration;
+
+export interface ArkTSStructDeclaration extends HasDecorators {
+  type: "ArkTSStructDeclaration";
+  id: Identifier;
+  body: ClassBody;
+  decorators?: Decorator[];
+}
+
+// TODO: Fine-grained typing waiting for Arkble v2 implementation
+// export interface ArkTSStructBody extends NodeBase {
+//   type: "ArkTSStructBody";
+//   body: ArkTSStructMember[];
+// }
+//
+// export type ArkTSStructMember = ArkTSStructProperty | ArkTSStructMethod;
+
+// export interface ArkTSStructMemberBase extends NodeBase, HasDecorators {
+//   accessibility?: Accessibility | null;
+// }
+//
+// export interface ArkTSStructProperty extends ArkTSStructMemberBase {
+//   type: "ArkTSStructProperty";
+//   key: Expression;
+//   value: Expression | undefined | null;
+//   typeAnnotation?: TypeAnnotationBase | null;
+// }
+//
+// export interface ArkTSStructMethod extends ArkTSStructMemberBase, FunctionBase {
+//   type: "ArkTSStructMethod";
+//   key: Expression;
+// }
+
+// export interface ArkTSStructProperty extends ClassProperty {
+//   type: "ArkTSStructProperty";
+// }
+//
+// export interface ArkTSStructMethod extends ClassMethod {
+//   type: "ArkTSStructMethod";
+// }
+
+// Only call expressions in a struct.build method or function/method decorated with @Builder are parsed as
+// this. Other call expressions are normally parsed as CallExpression (which can not have a trailing closure).
+export interface ArkTSCallExpression extends CallOrNewBase {
+  type: "ArkTSCallExpression";
+  trailingClosure?: BlockStatement;
 }

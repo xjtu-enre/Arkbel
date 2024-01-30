@@ -1,4 +1,5 @@
 export type Plugin =
+  | "arkts"
   | "asyncDoExpressions"
   | "asyncGenerators"
   | "bigInt"

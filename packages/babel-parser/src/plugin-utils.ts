@@ -113,6 +113,16 @@ export function validatePlugins(plugins: PluginList) {
     throw new Error("Cannot combine flow and typescript plugins.");
   }
 
+  if (hasPlugin(plugins, "arkts")
+      && (hasPlugin(plugins, "typescript")
+      || hasPlugin(plugins, "flow"))) {
+    throw new Error("Cannot combine arkts and typescript/flow plugins.");
+  }
+
+  if (hasPlugin(plugins, "arkts") && !hasPlugin(plugins, "decorators")) {
+    throw new Error("arkts plugin requires decorators plugin to be manually specified.");
+  }
+
   if (hasPlugin(plugins, "placeholders") && hasPlugin(plugins, "v8intrinsic")) {
     throw new Error("Cannot combine placeholders and v8intrinsic plugins.");
   }
@@ -251,6 +261,7 @@ import estree from "./plugins/estree.ts";
 import flow from "./plugins/flow/index.ts";
 import jsx from "./plugins/jsx/index.ts";
 import typescript from "./plugins/typescript/index.ts";
+import arkts from "./plugins/arkts/index.ts";
 import placeholders from "./plugins/placeholders.ts";
 import v8intrinsic from "./plugins/v8intrinsic.ts";
 
@@ -260,10 +271,11 @@ export const mixinPlugins = {
   jsx,
   flow,
   typescript,
+  arkts,
   v8intrinsic,
   placeholders,
 };
 
 export const mixinPluginNames = Object.keys(mixinPlugins) as ReadonlyArray<
-  "estree" | "jsx" | "flow" | "typescript" | "v8intrinsic" | "placeholders"
+  "estree" | "jsx" | "flow" | "typescript" | "arkts" | "v8intrinsic" | "placeholders"
 >;
