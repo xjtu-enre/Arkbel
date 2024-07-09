@@ -196,6 +196,9 @@ export default class CommentsParser extends BaseParser {
           case "ImportDeclaration":
             adjustInnerComments(node, node.specifiers, commentWS);
             break;
+          case "ArkTSImportDeclaration":
+            adjustInnerComments(node, node.specifiers, commentWS);
+            break;
           default: {
             setInnerComments(node, comments);
           }

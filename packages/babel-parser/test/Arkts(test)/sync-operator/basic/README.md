@@ -1,0 +1,1 @@
+Though ArkTS declares that `$$` is a kind of operator, given this can also be seen as a part of the variable name `$$xxx`, which is valid JS syntax, we currently do not treat it as a dedicated syntax.

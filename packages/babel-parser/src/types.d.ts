@@ -906,7 +906,10 @@ export interface MetaProperty extends NodeBase {
 
 export type ModuleDeclaration = AnyImport | AnyExport;
 
-export type AnyImport = ImportDeclaration | TsImportEqualsDeclaration;
+export type AnyImport =
+  | ImportDeclaration
+  | ArkTSImportDeclaration
+  | TsImportEqualsDeclaration;
 
 export type AnyExport =
   | ExportNamedDeclaration
@@ -1752,4 +1755,15 @@ export interface ArkTSStructDeclaration extends HasDecorators {
 export interface ArkTSCallExpression extends CallOrNewBase {
   type: "ArkTSCallExpression";
   trailingClosure?: BlockStatement;
+}
+export interface ArkTSImportDeclaration extends NodeBase {
+  type: "ArkTSImportDeclaration";
+  // TODO: $ReadOnlyArray
+  specifiers: Array<ImportSpecifier | ImportNamespaceSpecifier>;
+  source: Literal;
+  importKind?: "type" | "typeof" | "value"; // TODO: Not in spec,
+  phase?: null | "source" | "defer";
+  attributes?: ImportAttribute[];
+  // @deprecated
+  module?: boolean;
 }

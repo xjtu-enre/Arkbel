@@ -6,6 +6,7 @@
   "type": "commonjs",
   "scripts": {
     "postinstall": "node scripts/postinstall.js",
+    "webpack": " webpack --mode development",
     "bootstrap": "make bootstrap",
     "codesandbox:build": "make build-no-bundle",
     "build": "make build",
