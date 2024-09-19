@@ -406,7 +406,6 @@ export default abstract class StatementParser extends ExpressionParser {
     | N.Statement
     | N.Declaration
     | N.ImportDeclaration
-    | N.ArkTSImportDeclaration
     | N.ExportDefaultDeclaration
     | N.ExportNamedDeclaration
     | N.ExportAllDeclaration {
@@ -2396,7 +2395,12 @@ export default abstract class StatementParser extends ExpressionParser {
       if (node2.declaration?.type === "ClassDeclaration") {
         this.maybeTakeDecorators(decorators, node2.declaration, node2);
       } else if (node2.declaration?.type === "ArkTSStructDeclaration") {
-        this.maybeTakeDecorators(decorators, node2.declaration, node2);
+        this.maybeTakeDecorators(
+          decorators,
+          // @ts-ignore
+          node2.declaration,
+          node2,
+        );
       } else if (decorators) {
         throw this.raise(Errors.UnsupportedDecoratorExport, node);
       }
@@ -2412,7 +2416,12 @@ export default abstract class StatementParser extends ExpressionParser {
       if (decl.type === "ClassDeclaration") {
         this.maybeTakeDecorators(decorators, decl as N.ClassDeclaration, node2);
       } else if (decl.type === "ArkTSStructDeclaration") {
-        this.maybeTakeDecorators(decorators, decl as N.ArkTSStructDeclaration, node2,);
+        // @ts-ignore
+        this.maybeTakeDecorators(
+          decorators,
+          decl as N.ArkTSStructDeclaration,
+          node2,
+        );
       } else if (decorators) {
         throw this.raise(Errors.UnsupportedDecoratorExport, node);
       }
@@ -2533,6 +2542,7 @@ export default abstract class StatementParser extends ExpressionParser {
     }
 
     if (this.match(tt._struct)) {
+      //@ts-ignore
       return this.arktsParseStruct(expr);
     } //my do
 
@@ -2577,6 +2587,7 @@ export default abstract class StatementParser extends ExpressionParser {
       return node;
     }
     if (this.match(tt._struct)) {
+      //@ts-ignore
       const node = this.arktsParseStruct(
         this.startNode<N.ArkTSStructDeclaration>(),
       );

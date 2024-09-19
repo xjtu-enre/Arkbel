@@ -10,7 +10,7 @@ import { Errors } from "../../parse-error.ts";
 import type { ExpressionErrors } from "../../parser/util.ts";
 import type { Position } from "../../util/location.ts";
 
-const enum ArkTSParseContext {
+export const enum ArkTSParseContext {
   TOP_FIRST,
   TOP,
   CLOSURE,
@@ -19,13 +19,13 @@ const enum ArkTSParseContext {
 export default (superClass: ReturnType<typeof typescript>) =>
   class ArkTSParserMixin extends superClass {
     // Assuming ArkTS struct cannot be nested
-    declare inStructContext: boolean;
-    declare inForEach: boolean;
-    declare inLazyForeach: boolean;
-    declare inBuilderFunction: boolean;
-    declare inExtendFunction: boolean;
-    declare ExtendComponent: N.Node;
-    declare inStylesFunction: boolean;
+    inStructContext: boolean;
+    inForEach: boolean;
+    inLazyForeach: boolean;
+    inBuilderFunction: boolean;
+    inExtendFunction: boolean;
+    ExtendComponent: N.Node;
+    inStylesFunction: boolean;
 
     // Only change super method's signature to additional allow ArkTS decoratable entities to be decorated
     maybeTakeDecorators<T extends Undone<N.ArkTSDecoratable>>(
@@ -82,23 +82,10 @@ export default (superClass: ReturnType<typeof typescript>) =>
 
       this.inStructContext = true;
 
-      node.body = this.parseClassBody(false, true);
+      node.body = super.parseClassBody(false, true);
       this.inStructContext = false;
 
       return this.finishNode(node, "ArkTSStructDeclaration");
-    }
-    parseImport(
-      this: Parser,
-      node: Undone<N.ArkTSImportDeclaration>,
-    ): N.AnyImport {
-      if (this.match(tt.string)) {
-        // import '...'
-        return this.parseImportSourceAndAttributes(node);
-      }
-      return this.parseImportSpecifiersAndAfter(
-        node,
-        this.parseMaybeImportPhase(node, /* isExport */ false),
-      );
     }
     parseObjectProperty(
       this: Parser,
@@ -213,12 +200,14 @@ export default (superClass: ReturnType<typeof typescript>) =>
       }
       //have decorators plugin
       if (node.expression.name === "Builder") {
-        this.inBuilderFunction = true;
+        // @ts-ignore(Babel 7 vs Babel 8) ArkTS:it occurs in ArkTSParserMixin in fact
+        super.inBuilderFunction = true;
         //To Delete
         // this.BuilderFunction++;
         // console.log(`Builder:${this.BuilderFunction}`);
       }
       if (node.expression.name === "Styles") {
+        // @ts-ignore(Babel 7 vs Babel 8) ArkTS:it occurs in ArkTSParserMixin in fact
         this.inStylesFunction = true;
         //To Delete
         // this.SytleFunction++;
@@ -236,7 +225,9 @@ export default (superClass: ReturnType<typeof typescript>) =>
         node.arguments = this.parseCallExpressionArguments(tt.parenR, false);
         this.toReferencedList(node.arguments);
         if (node.callee.name === "Extend") {
+          // @ts-ignore(Babel 7 vs Babel 8) ArkTS:it occurs in ArkTSParserMixin in fact
           this.inExtendFunction = true;
+          // @ts-ignore(Babel 7 vs Babel 8) ArkTS:it occurs in ArkTSParserMixin in fact
           this.ExtendComponent = node.arguments[0];
           //To Delete
           // this.ExtendFunction++;
@@ -352,6 +343,7 @@ export default (superClass: ReturnType<typeof typescript>) =>
         node.body = this.finishNode(bodyNode, "BlockStatement");
         return;
       }
+      // @ts-ignore(Babel 7 vs Babel 8) ArkTS:it occurs in ArkTSParserMixin in fact
       if (!this.inStructContext || node.key?.name !== "build") {
         super.parseFunctionBody(node, allowExpression, isMethod);
         return;
@@ -384,12 +376,8 @@ export default (superClass: ReturnType<typeof typescript>) =>
      *
      * * `(` - Call after member access
      */
-
-    arktsParseBuildExpression(
-      node?,
-      allowMultipleExpressions: boolean,
-      context: ArkTSParseContext,
-    ) {
+    // @ts-ignore(Babel 7 vs Babel 8) ArkTS:it occurs in ArkTSParserMixin in fact
+    arktsParseBuildExpression(node?, allowMultipleExpressions: boolean, context: ArkTSParseContext,) {
       //console.log(node);
       if (node === undefined) {
         return node;
@@ -440,6 +428,7 @@ export default (superClass: ReturnType<typeof typescript>) =>
         }
         if (callNode.callee.name == "LazyForEach") this.inLazyForeach = true;
         this.expect(tt.parenL);
+        // @ts-ignore(Babel 7 vs Babel 8) ArkTS:it occurs in ArkTSParserMixin in fact
         callNode.arguments = this.parseCallExpressionArguments(tt.parenR);
 
         // Trailing closure
@@ -495,6 +484,7 @@ export default (superClass: ReturnType<typeof typescript>) =>
       } else if (this.eat(tt.parenL)) {
         const callNode = this.startNodeAtNode<N.ArkTSCallExpression>(node);
         callNode.callee = node;
+        // @ts-ignore(Babel 7 vs Babel 8) ArkTS:it occurs in ArkTSParserMixin in fact
         callNode.arguments = this.parseCallExpressionArguments(tt.parenR);
         this.finishNode(callNode, "ArkTSCallExpression");
 
@@ -518,6 +508,7 @@ export default (superClass: ReturnType<typeof typescript>) =>
         // (Semantically) should also under container component, but parser does not validate it
         const ifNode = this.startNode<N.IfStatement>();
         this.next(); // eat `if`
+        // @ts-ignore(Babel 7 vs Babel 8) ArkTS:it occurs in ArkTSParserMixin in fact
         ifNode.test = this.parseHeaderExpression();
 
         const consequentNode = this.startNode<N.BlockStatement>();
@@ -570,10 +561,8 @@ export default (superClass: ReturnType<typeof typescript>) =>
       return node;
     }
 
-    //TODOL
-    arktsParseExtendExpression(
-      node?,
-      allowMultipleExpressions: boolean,
+    // @ts-ignore(Babel 7 vs Babel 8) ArkTS:it occurs in ArkTSParserMixin in fact
+    arktsParseExtendExpression(node?, allowMultipleExpressions: boolean,
       context: ArkTSParseContext,
     ) {
       if (node === undefined) {
@@ -582,7 +571,7 @@ export default (superClass: ReturnType<typeof typescript>) =>
         if (node.type !== "" && node.type !== "MemberExpression") {
           return undefined;
         }
-        if(!this.inStructContext){
+        if (!this.inStructContext){
           this.raise(Errors.UnexpectedToken, this.state.curPosition(), {
             unexpected: "this",
           });
@@ -708,6 +697,7 @@ export default (superClass: ReturnType<typeof typescript>) =>
       } else if (this.eat(tt.parenL)) {
         const callNode = this.startNodeAtNode<N.ArkTSCallExpression>(node);
         callNode.callee = node;
+        // @ts-ignore(Babel 7 vs Babel 8) ArkTS:it occurs in ArkTSParserMixin in fact
         callNode.arguments = this.parseCallExpressionArguments(tt.parenR);
         this.finishNode(callNode, "ArkTSCallExpression");
 
@@ -729,12 +719,8 @@ export default (superClass: ReturnType<typeof typescript>) =>
       }
       return node;
     }
-
-    arktsParseForeachExpression(
-      node?,
-      allowMultipleExpressions: boolean,
-      context: ArkTSParseContext,
-    ) {
+    // @ts-ignore(Babel 7 vs Babel 8) ArkTS:it occurs in ArkTSParserMixin in fact
+    arktsParseForeachExpression(node?, allowMultipleExpressions: boolean, context: ArkTSParseContext,) {
       if (node === undefined) {
         return node;
       } else if (this.match(tt._this)) {
@@ -786,6 +772,7 @@ export default (superClass: ReturnType<typeof typescript>) =>
         if (callNode.callee.name == "Foreach") this.inForEach = true;
         if (callNode.callee.name == "LazyForEach") this.inLazyForeach = true;
         this.expect(tt.parenL);
+        // @ts-ignore(Babel 7 vs Babel 8) ArkTS:it occurs in ArkTSParserMixin in fact
         callNode.arguments = this.parseCallExpressionArguments(tt.parenR);
 
         // Trailing closure
@@ -836,6 +823,7 @@ export default (superClass: ReturnType<typeof typescript>) =>
       } else if (this.eat(tt.parenL)) {
         const callNode = this.startNodeAtNode<N.ArkTSCallExpression>(node);
         callNode.callee = node;
+        // @ts-ignore(Babel 7 vs Babel 8) ArkTS:it occurs in ArkTSParserMixin in fact
         callNode.arguments = this.parseCallExpressionArguments(tt.parenR);
         this.finishNode(callNode, "ArkTSCallExpression");
 
@@ -859,6 +847,7 @@ export default (superClass: ReturnType<typeof typescript>) =>
         // (Semantically) should also under container component, but parser does not validate it
         const ifNode = this.startNode<N.IfStatement>();
         this.next(); // eat `if`
+        // @ts-ignore(Babel 7 vs Babel 8) ArkTS:it occurs in ArkTSParserMixin in fact
         ifNode.test = this.parseHeaderExpression();
 
         const consequentNode = this.startNode<N.BlockStatement>();

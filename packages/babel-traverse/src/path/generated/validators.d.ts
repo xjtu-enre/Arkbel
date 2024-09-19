@@ -27,6 +27,14 @@ interface BaseNodePathValidators {
     this: NodePath<T>,
     opts?: Opts<t.ArgumentPlaceholder>,
   ): this is NodePath<T & t.ArgumentPlaceholder>;
+  isArkTSCallExpression<T extends t.Node>(
+    this: NodePath<T>,
+    opts?: Opts<t.ArkTSCallExpression>,
+  ): this is NodePath<T & t.ArkTSCallExpression>;
+  isArkTSStructDeclaration<T extends t.Node>(
+    this: NodePath<T>,
+    opts?: Opts<t.ArkTSStructDeclaration>,
+  ): this is NodePath<T & t.ArkTSStructDeclaration>;
   isArrayExpression<T extends t.Node>(
     this: NodePath<T>,
     opts?: Opts<t.ArrayExpression>,

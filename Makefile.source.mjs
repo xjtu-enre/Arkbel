@@ -87,11 +87,11 @@ function env(fun, env) {
  */
 
 target["clean-all"] = function () {
-  shell.rm("-rf", ["node_modules", "package-lock.json", ".changelog"]);
+  shell.rm("-force", ["node_modules", "package-lock.json", ".changelog"]);
 
   SOURCES.forEach(source => {
-    shell.rm("-rf", `${source}/*/test/tmp`);
-    shell.rm("-rf", `${source}/*/package-lock.json`);
+    shell.rm("-force", `${source}/*/test/tmp`);
+    shell.rm("-force", `${source}/*/package-lock.json`);
   });
 
   target["clean"]();
@@ -101,7 +101,7 @@ target["clean-all"] = function () {
 target["clean"] = function () {
   target["test-clean"]();
 
-  shell.rm("-rf", [
+  shell.rm("-force", [
     ".npmrc",
     "coverage",
     "packages/*/npm-debug*",
@@ -111,14 +111,14 @@ target["clean"] = function () {
 
 target["test-clean"] = function () {
   SOURCES.forEach(source => {
-    shell.rm("-rf", `${source}/*/test/tmp`);
-    shell.rm("-rf", `${source}/*/test-fixtures.json`);
+    shell.rm("-force", `${source}/*/test/tmp`);
+    shell.rm("-force", `${source}/*/test-fixtures.json`);
   });
 };
 
 target["clean-lib"] = function () {
   shell.rm(
-    "-rf",
+    "-force",
     SOURCES.map(source => `${source}/*/lib`)
   );
 
@@ -127,7 +127,7 @@ target["clean-lib"] = function () {
 };
 
 target["clean-runtime-helpers"] = function () {
-  shell.rm("-rf", [
+  shell.rm("-force", [
     "packages/babel-runtime/helpers/**/*.js",
     "packages/babel-runtime-corejs2/helpers/**/*.js",
     "packages/babel-runtime-corejs3/helpers/**/*.js",
@@ -296,8 +296,8 @@ target["tscheck"] = function () {
   target["generate-tsconfig"]();
 
   // ts doesn't generate declaration files after we remove the output directory by manually when incremental==true
-  shell.rm("-rf", "tsconfig.tsbuildinfo");
-  shell.rm("-rf", "dts");
+  shell.rm("-force", "tsconfig.tsbuildinfo");
+  shell.rm("-force", "dts");
   yarn(["tsc", "-b", "."]);
 };
 
@@ -406,7 +406,7 @@ function bootstrapParserTests(name, repoURL, subPaths) {
 
   const dir = "./build/" + name.toLowerCase();
 
-  shell.rm("-rf", dir);
+  shell.rm("-force", dir);
   shell.mkdir("-p", "build");
 
   exec("git", [

@@ -69,6 +69,12 @@ export function assertCallExpression(
 ): asserts node is t.CallExpression {
   assert("CallExpression", node, opts);
 }
+export function assertArkTSCallExpression(
+  node: object | null | undefined,
+  opts?: object | null,
+): asserts node is t.ArkTSCallExpression {
+  assert("ArkTSCallExpression", node, opts);
+}
 export function assertCatchClause(
   node: object | null | undefined,
   opts?: object | null,
@@ -356,6 +362,12 @@ export function assertClassDeclaration(
   opts?: object | null,
 ): asserts node is t.ClassDeclaration {
   assert("ClassDeclaration", node, opts);
+}
+export function assertArkTSStructDeclaration(
+  node: object | null | undefined,
+  opts?: object | null,
+): asserts node is t.ArkTSStructDeclaration {
+  assert("ArkTSStructDeclaration", node, opts);
 }
 export function assertExportAllDeclaration(
   node: object | null | undefined,

@@ -113,14 +113,17 @@ export function validatePlugins(plugins: PluginList) {
     throw new Error("Cannot combine flow and typescript plugins.");
   }
 
-  if (hasPlugin(plugins, "arkts")
-      && (hasPlugin(plugins, "typescript")
-      || hasPlugin(plugins, "flow"))) {
+  if (
+    hasPlugin(plugins, "arkts") &&
+    (hasPlugin(plugins, "typescript") || hasPlugin(plugins, "flow"))
+  ) {
     throw new Error("Cannot combine arkts and typescript/flow plugins.");
   }
 
   if (hasPlugin(plugins, "arkts") && !hasPlugin(plugins, "decorators")) {
-    throw new Error("arkts plugin requires decorators plugin to be manually specified.");
+    throw new Error(
+      "arkts plugin requires decorators plugin to be manually specified.",
+    );
   }
 
   if (hasPlugin(plugins, "placeholders") && hasPlugin(plugins, "v8intrinsic")) {
@@ -266,6 +269,8 @@ import placeholders from "./plugins/placeholders.ts";
 import v8intrinsic from "./plugins/v8intrinsic.ts";
 
 // NOTE: order is important. estree must come first; placeholders must come last.
+
+// @ts-ignore(Babel 7 vs Babel 8) ArkTS:tsc have trouble but it's ok
 export const mixinPlugins = {
   estree,
   jsx,
@@ -277,5 +282,11 @@ export const mixinPlugins = {
 };
 
 export const mixinPluginNames = Object.keys(mixinPlugins) as ReadonlyArray<
-  "estree" | "jsx" | "flow" | "typescript" | "arkts" | "v8intrinsic" | "placeholders"
+  | "estree"
+  | "jsx"
+  | "flow"
+  | "typescript"
+  | "arkts"
+  | "v8intrinsic"
+  | "placeholders"
 >;

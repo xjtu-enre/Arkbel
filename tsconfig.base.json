@@ -6,7 +6,7 @@
     "declaration": true,
     "declarationMap": true,
     "emitDeclarationOnly": true,
-    "declarationDir": "./dts",
+    "declarationDir": "./dist",
     "moduleResolution": "node",
     "esModuleInterop": true,
     "isolatedModules": true,

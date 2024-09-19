@@ -228,6 +228,20 @@ export function CallExpression(this: Printer, node: t.CallExpression) {
   this.rightParens(node);
 }
 
+export function ArkTSCallExpression(
+  this: Printer,
+  node: t.ArkTSCallExpression,
+) {
+  this.print(node.callee, node);
+
+  this.print(node.typeArguments, node); // Flow
+  this.print(node.typeParameters, node); // TS
+  this.token("(");
+  this.printList(node.arguments, node);
+  this.print(node.trailingClosure, node);
+  this.rightParens(node);
+}
+
 export function Import(this: Printer) {
   this.word("import");
 }

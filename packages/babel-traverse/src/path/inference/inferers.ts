@@ -190,6 +190,7 @@ export {
   Func as FunctionDeclaration,
   Func as ClassExpression,
   Func as ClassDeclaration,
+  Func as ArkTSStructDeclaration,
 };
 
 const isArrayFrom = buildMatchMemberExpression("Array.from");

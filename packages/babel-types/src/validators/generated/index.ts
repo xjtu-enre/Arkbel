@@ -107,6 +107,16 @@ export function isCallExpression(
 
   return opts == null || shallowEqual(node, opts);
 }
+export function isArkTSCallExpression(
+  node: t.Node | null | undefined,
+  opts?: Opts<t.ArkTSCallExpression> | null,
+): node is t.ArkTSCallExpression {
+  if (!node) return false;
+
+  if (node.type !== "ArkTSCallExpression") return false;
+
+  return opts == null || shallowEqual(node, opts);
+}
 export function isCatchClause(
   node: t.Node | null | undefined,
   opts?: Opts<t.CatchClause> | null,
@@ -584,6 +594,16 @@ export function isClassDeclaration(
   if (!node) return false;
 
   if (node.type !== "ClassDeclaration") return false;
+
+  return opts == null || shallowEqual(node, opts);
+}
+export function isArkTSStructDeclaration(
+  node: t.Node | null | undefined,
+  opts?: Opts<t.ArkTSStructDeclaration> | null,
+): node is t.ArkTSStructDeclaration {
+  if (!node) return false;
+
+  if (node.type !== "ArkTSStructDeclaration") return false;
 
   return opts == null || shallowEqual(node, opts);
 }
@@ -2533,6 +2553,7 @@ export function isStandardized(
     case "BlockStatement":
     case "BreakStatement":
     case "CallExpression":
+    case "ArkTSCallExpression":
     case "CatchClause":
     case "ConditionalExpression":
     case "ContinueStatement":
@@ -2581,6 +2602,7 @@ export function isStandardized(
     case "ClassBody":
     case "ClassExpression":
     case "ClassDeclaration":
+    case "ArkTSStructDeclaration":
     case "ExportAllDeclaration":
     case "ExportDefaultDeclaration":
     case "ExportNamedDeclaration":
@@ -2641,6 +2663,7 @@ export function isExpression(
     case "AssignmentExpression":
     case "BinaryExpression":
     case "CallExpression":
+    case "ArkTSCallExpression":
     case "ConditionalExpression":
     case "FunctionExpression":
     case "Identifier":
@@ -2743,6 +2766,7 @@ export function isScopable(
     case "ArrowFunctionExpression":
     case "ClassExpression":
     case "ClassDeclaration":
+    case "ArkTSStructDeclaration":
     case "ForOfStatement":
     case "ClassMethod":
     case "ClassPrivateMethod":
@@ -2836,6 +2860,7 @@ export function isStatement(
     case "WhileStatement":
     case "WithStatement":
     case "ClassDeclaration":
+    case "ArkTSStructDeclaration":
     case "ExportAllDeclaration":
     case "ExportDefaultDeclaration":
     case "ExportNamedDeclaration":
@@ -3097,6 +3122,7 @@ export function isDeclaration(
     case "FunctionDeclaration":
     case "VariableDeclaration":
     case "ClassDeclaration":
+    case "ArkTSStructDeclaration":
     case "ExportAllDeclaration":
     case "ExportDefaultDeclaration":
     case "ExportNamedDeclaration":

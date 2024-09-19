@@ -213,6 +213,55 @@ defineType("CallExpression", {
     },
   },
 });
+defineType("ArkTSCallExpression", {
+  visitor: [
+    "callee",
+    "arguments",
+    "typeParameters",
+    "typeArguments",
+    "trailingClosure",
+  ],
+  builder: ["callee", "arguments", "trailingClosure"],
+  aliases: ["Expression"],
+  fields: {
+    callee: {
+      validate: assertNodeType("Expression", "Super", "V8IntrinsicIdentifier"),
+    },
+    arguments: {
+      validate: chain(
+        assertValueType("array"),
+        assertEach(
+          assertNodeType(
+            "Expression",
+            "SpreadElement",
+            "JSXNamespacedName",
+            "ArgumentPlaceholder",
+          ),
+        ),
+      ),
+    },
+    ...(!process.env.BABEL_TYPES_8_BREAKING
+      ? {
+          optional: {
+            validate: assertOneOf(true, false),
+            optional: true,
+          },
+        }
+      : {}),
+    typeArguments: {
+      validate: assertNodeType("TypeParameterInstantiation"),
+      optional: true,
+    },
+    typeParameters: {
+      validate: assertNodeType("TSTypeParameterInstantiation"),
+      optional: true,
+    },
+    trailingClosure: {
+      validate: assertNodeType("BlockStatement"),
+      optional: true,
+    },
+  },
+});
 
 defineType("CatchClause", {
   visitor: ["param", "body"],
@@ -1511,7 +1560,28 @@ defineType("ClassDeclaration", {
     };
   })(),
 });
-
+defineType("ArkTSStructDeclaration", {
+  visitor: ["id", "body", "decorators"],
+  aliases: ["Scopable", "Statement", "Declaration"],
+  fields: {
+    id: {
+      validate: assertNodeType("Identifier"),
+      // The id may be omitted if this is the child of an
+      // ExportDefaultDeclaration.
+      optional: true,
+    },
+    body: {
+      validate: assertNodeType("ClassBody"),
+    },
+    decorators: {
+      validate: chain(
+        assertValueType("array"),
+        assertEach(assertNodeType("Decorator")),
+      ),
+      optional: true,
+    },
+  },
+});
 defineType("ExportAllDeclaration", {
   builder: ["source"],
   visitor: ["source", "attributes", "assertions"],
@@ -1558,6 +1628,7 @@ defineType("ExportDefaultDeclaration", {
         "TSDeclareFunction",
         "FunctionDeclaration",
         "ClassDeclaration",
+        "ArkTSStructDeclaration",
         "Expression",
       ),
     },

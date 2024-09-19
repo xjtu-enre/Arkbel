@@ -21,6 +21,12 @@ export interface NodePathAssertions {
   assertArgumentPlaceholder(
     opts?: Opts<t.ArgumentPlaceholder>,
   ): asserts this is NodePath<t.ArgumentPlaceholder>;
+  assertArkTSCallExpression(
+    opts?: Opts<t.ArkTSCallExpression>,
+  ): asserts this is NodePath<t.ArkTSCallExpression>;
+  assertArkTSStructDeclaration(
+    opts?: Opts<t.ArkTSStructDeclaration>,
+  ): asserts this is NodePath<t.ArkTSStructDeclaration>;
   assertArrayExpression(
     opts?: Opts<t.ArrayExpression>,
   ): asserts this is NodePath<t.ArrayExpression>;
