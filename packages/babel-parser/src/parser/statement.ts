@@ -2397,7 +2397,7 @@ export default abstract class StatementParser extends ExpressionParser {
       } else if (node2.declaration?.type === "ArkTSStructDeclaration") {
         this.maybeTakeDecorators(
           decorators,
-          // @ts-ignore
+          // @ts-ignore(Babel 7 vs Babel 8) ArkTS:it ok in ArkTS
           node2.declaration,
           node2,
         );
@@ -2416,9 +2416,9 @@ export default abstract class StatementParser extends ExpressionParser {
       if (decl.type === "ClassDeclaration") {
         this.maybeTakeDecorators(decorators, decl as N.ClassDeclaration, node2);
       } else if (decl.type === "ArkTSStructDeclaration") {
-        // @ts-ignore
         this.maybeTakeDecorators(
           decorators,
+          // @ts-ignore(Babel 7 vs Babel 8) ArkTS:it ok in ArkTS
           decl as N.ArkTSStructDeclaration,
           node2,
         );
@@ -2542,7 +2542,7 @@ export default abstract class StatementParser extends ExpressionParser {
     }
 
     if (this.match(tt._struct)) {
-      //@ts-ignore
+      // @ts-ignore(Babel 7 vs Babel 8) ArkTS:it ok in ArkTS
       return this.arktsParseStruct(expr);
     } //my do
 
@@ -2587,7 +2587,7 @@ export default abstract class StatementParser extends ExpressionParser {
       return node;
     }
     if (this.match(tt._struct)) {
-      //@ts-ignore
+      // @ts-ignore(Babel 7 vs Babel 8) ArkTS:it ok in ArkTS
       const node = this.arktsParseStruct(
         this.startNode<N.ArkTSStructDeclaration>(),
       );

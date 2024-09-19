@@ -1,4 +1,5 @@
 import shell from "shelljs";
+shell.exec("tsc");
 shell.exec(
   "robocopy ./dist/packages/babel-types/src ./packages/babel-types/lib /E"
 );
