@@ -23,7 +23,7 @@ using yarn
 
 ### Make pack and to use
 0. Run `yarn install` to install dependency;
-1. Run `make build-bundle` to bundle code files;
+1. Run `make build` to bundle code files;
 2. Run `node scripts/get-declaration.js` to get declaration files in libs;
 3. Open `Enre-ArkTS` and run `npm install` to get packages of 'Arkbel/parser','Arkbel/traverse','Arkbel/types'.
 >To be Noticed: before run `npm install`,make sure convert node below v18.20.4
