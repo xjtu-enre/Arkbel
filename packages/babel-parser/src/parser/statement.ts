@@ -718,7 +718,6 @@ export default abstract class StatementParser extends ExpressionParser {
     do {
       decorators.push(this.parseDecorator());
     } while (this.match(tt.at));
-
     if (this.match(tt._export)) {
       if (!allowExport) {
         this.unexpected();
@@ -2395,6 +2394,13 @@ export default abstract class StatementParser extends ExpressionParser {
       this.checkExport(node2, true, false, !!node2.source);
       if (node2.declaration?.type === "ClassDeclaration") {
         this.maybeTakeDecorators(decorators, node2.declaration, node2);
+      } else if (node2.declaration?.type === "ArkTSStructDeclaration") {
+        this.maybeTakeDecorators(
+          decorators,
+          // @ts-ignore(Babel 7 vs Babel 8) ArkTS:it ok in ArkTS
+          node2.declaration,
+          node2,
+        );
       } else if (decorators) {
         throw this.raise(Errors.UnsupportedDecoratorExport, node);
       }
@@ -2409,6 +2415,13 @@ export default abstract class StatementParser extends ExpressionParser {
 
       if (decl.type === "ClassDeclaration") {
         this.maybeTakeDecorators(decorators, decl as N.ClassDeclaration, node2);
+      } else if (decl.type === "ArkTSStructDeclaration") {
+        this.maybeTakeDecorators(
+          decorators,
+          // @ts-ignore(Babel 7 vs Babel 8) ArkTS:it ok in ArkTS
+          decl as N.ArkTSStructDeclaration,
+          node2,
+        );
       } else if (decorators) {
         throw this.raise(Errors.UnsupportedDecoratorExport, node);
       }
@@ -2528,6 +2541,11 @@ export default abstract class StatementParser extends ExpressionParser {
       return this.parseClass(expr as Undone<N.ClassExpression>, true, true);
     }
 
+    if (this.match(tt._struct)) {
+      // @ts-ignore(Babel 7 vs Babel 8) ArkTS:it ok in ArkTS
+      return this.arktsParseStruct(expr);
+    } //my do
+
     if (this.match(tt.at)) {
       if (
         this.hasPlugin("decorators") &&
@@ -2565,6 +2583,13 @@ export default abstract class StatementParser extends ExpressionParser {
         this.startNode<N.ClassDeclaration>(),
         true,
         false,
+      );
+      return node;
+    }
+    if (this.match(tt._struct)) {
+      // @ts-ignore(Babel 7 vs Babel 8) ArkTS:it ok in ArkTS
+      const node = this.arktsParseStruct(
+        this.startNode<N.ArkTSStructDeclaration>(),
       );
       return node;
     }
@@ -2656,6 +2681,7 @@ export default abstract class StatementParser extends ExpressionParser {
       type === tt._const ||
       type === tt._function ||
       type === tt._class ||
+      type === tt._struct ||
       this.isLet() ||
       this.isAsyncFunction()
     );

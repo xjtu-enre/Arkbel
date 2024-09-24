@@ -150,6 +150,7 @@ getBindingIdentifiers.keys = {
   ForOfStatement: ["left"],
 
   ClassDeclaration: ["id"],
+  ArkTSStructDeclaration: ["id"],
   ClassExpression: ["id"],
 
   RestElement: ["argument"],

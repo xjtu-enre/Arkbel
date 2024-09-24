@@ -2287,7 +2287,6 @@ export default abstract class ExpressionParser extends LValParser {
       prop.value = isPattern
         ? this.parseMaybeDefault(this.state.startLoc)
         : this.parseMaybeAssignAllowIn(refExpressionErrors);
-
       return this.finishNode(prop, "ObjectProperty");
     }
 
@@ -2513,7 +2512,6 @@ export default abstract class ExpressionParser extends LValParser {
     }
     this.state.maybeInArrowParameters = false;
     this.parseFunctionBody(node, true);
-
     this.prodParam.exit();
     this.scope.exit();
     this.state.maybeInArrowParameters = oldMaybeInArrowParameters;
@@ -2765,7 +2763,6 @@ export default abstract class ExpressionParser extends LValParser {
 
   parseIdentifierName(liberal?: boolean): string {
     let name: string;
-
     const { startLoc, type } = this.state;
 
     if (tokenIsKeywordOrIdentifier(type)) {
@@ -2785,9 +2782,7 @@ export default abstract class ExpressionParser extends LValParser {
     } else {
       this.checkReservedWord(name, startLoc, tokenIsKeyword, false);
     }
-
     this.next();
-
     return name;
   }
 

@@ -108,6 +108,20 @@ export function callExpression(
     arguments: _arguments,
   });
 }
+export function arkTSCallExpression(
+  callee: t.Expression | t.Super | t.V8IntrinsicIdentifier,
+  _arguments: Array<
+    t.Expression | t.SpreadElement | t.JSXNamespacedName | t.ArgumentPlaceholder
+  >,
+  trailingClosure: t.BlockStatement | null = null,
+): t.ArkTSCallExpression {
+  return validateNode<t.ArkTSCallExpression>({
+    type: "ArkTSCallExpression",
+    callee,
+    arguments: _arguments,
+    trailingClosure,
+  });
+}
 export function catchClause(
   param:
     | t.Identifier
@@ -632,6 +646,18 @@ export function classDeclaration(
     decorators,
   });
 }
+export function arkTSStructDeclaration(
+  id: t.Identifier | null | undefined = null,
+  body: t.ClassBody,
+  decorators: Array<t.Decorator> | null = null,
+): t.ArkTSStructDeclaration {
+  return validateNode<t.ArkTSStructDeclaration>({
+    type: "ArkTSStructDeclaration",
+    id,
+    body,
+    decorators,
+  });
+}
 export function exportAllDeclaration(
   source: t.StringLiteral,
 ): t.ExportAllDeclaration {
@@ -645,6 +671,7 @@ export function exportDefaultDeclaration(
     | t.TSDeclareFunction
     | t.FunctionDeclaration
     | t.ClassDeclaration
+    | t.ArkTSStructDeclaration
     | t.Expression,
 ): t.ExportDefaultDeclaration {
   return validateNode<t.ExportDefaultDeclaration>({

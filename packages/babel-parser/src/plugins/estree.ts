@@ -485,7 +485,8 @@ export default (superClass: typeof Parser) =>
           {
             const { declaration } = node;
             if (
-              declaration?.type === "ClassDeclaration" &&
+              (declaration?.type === "ClassDeclaration" ||
+                declaration?.type === "ArkTSStructDeclaration") &&
               declaration.decorators?.length > 0 &&
               // decorator comes before export
               declaration.start === node.start

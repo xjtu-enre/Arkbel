@@ -6,6 +6,29 @@ import {
 import type * as t from "@babel/types";
 import * as charCodes from "charcodes";
 
+export function ArkTSStructDeclaration(
+  this: Printer,
+  node: t.ArkTSStructDeclaration,
+  parent: t.Node,
+) {
+  const inExport =
+    isExportDefaultDeclaration(parent) || isExportNamedDeclaration(parent);
+
+  if (!inExport) {
+    this.printJoin(node.decorators, node);
+  }
+
+  this.word("struct");
+
+  if (node.id) {
+    this.space();
+    this.print(node.id, node);
+  }
+
+  this.space();
+  this.print(node.body, node);
+}
+
 export function ClassDeclaration(
   this: Printer,
   node: t.ClassDeclaration,

@@ -16,6 +16,7 @@ import {
   isClass,
   isClassBody,
   isClassDeclaration,
+  isArkTSStructDeclaration,
   isExportAllDeclaration,
   isExportDefaultDeclaration,
   isExportNamedDeclaration,
@@ -179,6 +180,7 @@ function gatherNodeParts(node: t.Node, parts: NodePart[]) {
     case "FunctionDeclaration":
     case "ClassExpression":
     case "ClassDeclaration":
+    case "ArkTSStructDeclaration":
       gatherNodeParts(node.id, parts);
       break;
 
@@ -287,7 +289,11 @@ const collectorVisitor: Visitor<CollectVisitorState> = {
       // ExportAllDeclaration does not have `declaration`
       if (isExportAllDeclaration(node)) return;
       const declar = node.declaration;
-      if (isClassDeclaration(declar) || isFunctionDeclaration(declar)) {
+      if (
+        isClassDeclaration(declar) ||
+        isArkTSStructDeclaration(declar) ||
+        isFunctionDeclaration(declar)
+      ) {
         const id = declar.id;
         if (!id) return;
 
@@ -330,7 +336,10 @@ const collectorVisitor: Visitor<CollectVisitorState> = {
     parent.registerDeclaration(path);
 
     // Register class identifier in class' scope if this is a class declaration.
-    if (path.isClassDeclaration() && path.node.id) {
+    if (
+      (path.isClassDeclaration() || path.isArkTSStructDeclaration()) &&
+      path.node.id
+    ) {
       const id = path.node.id;
       const name = id.name;
 
@@ -773,7 +782,8 @@ export default class Scope {
       if (
         declar.isClassDeclaration() ||
         declar.isFunctionDeclaration() ||
-        declar.isVariableDeclaration()
+        declar.isVariableDeclaration() ||
+        declar.isArkTSStructDeclaration()
       ) {
         this.registerDeclaration(declar);
       }

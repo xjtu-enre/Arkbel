@@ -2110,7 +2110,8 @@ export default (superClass: ClassWithMixin<typeof Parser, IJSXParserMixin>) =>
         case "declare": {
           const declaration = this.tsTryParseDeclare(node);
           if (declaration) {
-            declaration.declare = true;
+            if (declaration.type !== "ArkTSStructDeclaration")
+              declaration.declare = true;
           }
           return declaration;
         }
@@ -3143,7 +3144,7 @@ export default (superClass: ClassWithMixin<typeof Parser, IJSXParserMixin>) =>
         // Reset location to include `declare` in range
         this.resetStartLocation(declaration, startLoc);
 
-        declaration.declare = true;
+        if (declaration.type!=="ArkTSStructDeclaration")declaration.declare = true;
       }
 
       return declaration;
